@@ -9,12 +9,19 @@ class Panier
         $this->articles[] = ['nom' => $nom, 'prix' => $prix, 'quantite' => $quantite];
     }
 
-    public function calculerTotal($typeReduction = null, $valeur = 0)
+    // NOUVEAU : le calcul du sous-total n'existe plus qu'à un seul endroit
+    public function calculerSousTotal()
     {
         $sousTotal = 0;
         foreach ($this->articles as $article) {
             $sousTotal += $article['prix'] * $article['quantite'];
         }
+        return $sousTotal;
+    }
+
+    public function calculerTotal($typeReduction = null, $valeur = 0)
+    {
+        $sousTotal = $this->calculerSousTotal();
 
         if ($typeReduction == 'pourcentage') {
             $total = $sousTotal - ($sousTotal * $valeur / 100);
@@ -42,10 +49,7 @@ class Panier
 
     public function afficherRecapitulatif()
     {
-        $sousTotal = 0;
-        foreach ($this->articles as $article) {
-            $sousTotal += $article['prix'] * $article['quantite'];
-        }
+        $sousTotal = $this->calculerSousTotal();
         echo 'Récapitulatif : ' . $sousTotal . PHP_EOL;
     }
 }
