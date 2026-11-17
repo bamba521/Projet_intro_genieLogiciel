@@ -52,4 +52,16 @@ class PanierTest extends TestCase
         $panier = $this->panierDe(20000);
         $this->assertEquals(20000, $panier->calculerTotal(ReductionFactory::creer('type_inconnu', 1)));
     }
+
+    public function testOffertSeuilAtteint(): void
+    {
+        $panier = $this->panierDe(50000);
+        $this->assertEquals(45000, $panier->calculerTotal(ReductionFactory::creer('offert_seuil')));
+    }
+
+    public function testOffertSeuilNonAtteint(): void
+    {
+        $panier = $this->panierDe(49999);
+        $this->assertEquals(49999, $panier->calculerTotal(ReductionFactory::creer('offert_seuil')));
+    }
 }
