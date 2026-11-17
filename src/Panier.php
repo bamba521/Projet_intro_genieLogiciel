@@ -2,50 +2,30 @@
 
 class Panier
 {
-    private $articles = [];
+    private array $articles = [];
 
-    public function ajouter($nom, $prix, $quantite)
+    public function ajouter(Article $article): void
     {
-        $this->articles[] = ['nom' => $nom, 'prix' => $prix, 'quantite' => $quantite];
+        $this->articles[] = $article;
     }
 
-    public function calculerSousTotal()
+    public function calculerSousTotal(): float
     {
-        $sousTotal = 0;
+        $total = 0.0;
         foreach ($this->articles as $article) {
-            $sousTotal += $article['prix'] * $article['quantite'];
+            $total += $article->sousTotal();
         }
-        return $sousTotal;
+        return $total;
     }
 
-    public function calculerTotal($typeReduction = null, $valeurReduction = 0)
+    public function calculerTotal(Reduction $reduction): float
     {
-        $sousTotal = $this->calculerSousTotal();
-
-        if ($typeReduction == 'pourcentage') {
-            $totalApresReduction = $sousTotal - ($sousTotal * $valeurReduction / 100);
-        } elseif ($typeReduction == 'montant') {
-            $totalApresReduction = $sousTotal - $valeurReduction;
-        } elseif ($typeReduction == 'code_promo') {
-            if ($valeurReduction == 'PROMO10') {
-                $totalApresReduction = $sousTotal * 0.9;
-            } else {
-                $totalApresReduction = $sousTotal;
-            }
-        } else {
-            $totalApresReduction = $sousTotal;
-        }
-
-        if ($totalApresReduction < 0) {
-            $totalApresReduction = 0;
-        }
-
-        return $totalApresReduction;
+        return max(0.0, $reduction->appliquer($this->calculerSousTotal()));
     }
 
-    public function afficherRecapitulatif($typeReduction = null, $valeurReduction = 0)
+    public function afficherRecapitulatif(Reduction $reduction): void
     {
         echo 'Sous-total : ' . $this->calculerSousTotal() . PHP_EOL;
-        echo 'Total à payer : ' . $this->calculerTotal($typeReduction, $valeurReduction) . PHP_EOL;
+        echo 'Total à payer : ' . $this->calculerTotal($reduction) . PHP_EOL;
     }
 }
