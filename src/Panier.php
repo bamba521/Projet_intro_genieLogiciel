@@ -2,6 +2,7 @@
 
 class Panier
 {
+    /** @var Article[] */
     private array $articles = [];
 
     public function ajouter(Article $article): void
