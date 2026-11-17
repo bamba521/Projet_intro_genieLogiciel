@@ -9,7 +9,6 @@ class Panier
         $this->articles[] = ['nom' => $nom, 'prix' => $prix, 'quantite' => $quantite];
     }
 
-    // NOUVEAU : le calcul du sous-total n'existe plus qu'à un seul endroit
     public function calculerSousTotal()
     {
         $sousTotal = 0;
@@ -41,15 +40,13 @@ class Panier
             $total = 0;
         }
 
-        echo 'Sous-total : ' . $sousTotal . PHP_EOL;
-        echo 'Total à payer : ' . $total . PHP_EOL;
-
-        return $total;
+        return $total; // plus aucun echo ici : la méthode ne fait que calculer
     }
 
-    public function afficherRecapitulatif()
+    // L'affichage vit ici, et seulement ici
+    public function afficherRecapitulatif($typeReduction = null, $valeur = 0)
     {
-        $sousTotal = $this->calculerSousTotal();
-        echo 'Récapitulatif : ' . $sousTotal . PHP_EOL;
+        echo 'Sous-total : ' . $this->calculerSousTotal() . PHP_EOL;
+        echo 'Total à payer : ' . $this->calculerTotal($typeReduction, $valeur) . PHP_EOL;
     }
 }
